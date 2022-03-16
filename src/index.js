@@ -1,6 +1,8 @@
-import './sass/main.scss';
+import './css/main.css';
 import { Notify } from 'notiflix';
 import axios from "axios";
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 
 const API_KEY = '24511799-4a7f974650a4e56ef46644e1e';
 const URL = "https://pixabay.com/api/?key="+API_KEY+"&q="+encodeURIComponent('cats')+"&image_type=photo&orientation=horizontal&safesearch=true";
@@ -20,3 +22,5 @@ const URL = "https://pixabay.com/api/?key="+API_KEY+"&q="+encodeURIComponent('ca
 // downloads - кількість завантажень.
 
 // Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+// Notify.failure("We're sorry, but you've reached the end of search results.");
+// Notify.info('Hooray! We found ${totalHits} images.');
