@@ -19,6 +19,7 @@ function onSubmit(event) {
   refs.gallery.innerHTML = '';
   let lightboxGallery;
   localStorage.removeItem(STORAGE_SEARCH);
+  localStorage.removeItem(STORAGE_KEY);
   if (!value) {
     return Notify.warning('Please enter some text to input field!');
   }
