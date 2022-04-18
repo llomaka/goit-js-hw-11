@@ -41,6 +41,19 @@ img {
   height: auto;
 }
 
+.visually-hidden {
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  border: 0px;
+  padding: 0px;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  margin: -1px;
+}
+
 .search-form {
   position: fixed;
   top: 0;
@@ -100,3 +113,19 @@ img {
 .info-item {
   text-align: center;
 }
+
+.load-more {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  /* transition: color var(--animation-duration) var(--timing-function),
+    background-color var(--animation-duration) var(--timing-function); */
+}
+
+/* .load-more:hover,
+.load-more:focus {
+  color: #fafafa;
+  background-color: #6600cc;
+} */

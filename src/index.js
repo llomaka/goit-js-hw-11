@@ -13,20 +13,17 @@ const refs = getRefs();
 let searchValue = '';
 let lightboxGallery = new SimpleLightbox('.gallery a', { captionsData: 'alt', captionDelay: 250 });
 Notify.init({ fontSize: '18px', timeout: 7000});
-
+refs.more.classList.add("visually-hidden");
 refs.button.addEventListener('click', onSubmit);
+refs.more.addEventListener('click', onClick);
 addBackToTop();
 
 function onSubmit(event) {
   event.preventDefault();
+  refs.more.classList.add("visually-hidden");
   const value = refs.input.value.trim();
   searchValue = value;
   refs.gallery.innerHTML = '';
-  window.scroll({
-    top: 0,
-    left: 0,
-    behavior: 'smooth'
-  });
   localStorage.removeItem(STORAGE_SEARCH);
   localStorage.removeItem(STORAGE_KEY);
   if (!value) {
@@ -40,20 +37,23 @@ function onSubmit(event) {
       Notify.success(`Hooray! We found ${response.data.totalHits} images.`);
       renderGallery(response);
       if (response.data.totalHits < 40) {
+        Notify.warning("We're sorry, but you've reached the end of search results.");
         localStorage.setItem(STORAGE_SEARCH, 1);
+        refs.more.classList.add("visually-hidden");
       }
+      if (response.data.totalHits > 40) {
+        refs.more.classList.remove("visually-hidden");
+      }
+
     })
     .catch(onSearchError);
   lightboxGallery.refresh();
-  window.addEventListener('scroll', onScroll);
   event.target.form.reset();
 };
 
-function onScroll() {
-  if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight) {
+function onClick() {
     if (localStorage.getItem(STORAGE_SEARCH)) {
-      window.removeEventListener('scroll', onScroll);
-      return Notify.failure("We're sorry, but you've reached the end of search results.");
+      return Notify.warning("We're sorry, but you've reached the end of search results.");
     }
     let pageCounter = 1;
     if (localStorage.getItem(STORAGE_KEY)) {
@@ -64,7 +64,7 @@ function onScroll() {
         if (!response.data.hits.length) {
           localStorage.removeItem(STORAGE_KEY);
           localStorage.setItem(STORAGE_SEARCH, 1);
-          window.removeEventListener('scroll', onScroll);
+          refs.more.classList.add("visually-hidden");
           return Notify.failure("We're sorry, but you've reached the end of search results.");
         }
         let numbers = response.request.responseURL.match(/\d+/g);
@@ -73,7 +73,6 @@ function onScroll() {
         lightboxGallery.refresh();
       })
       .catch(onSearchError);
-  }
 }
 
 function onSearchError(error) {
