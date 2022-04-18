@@ -1,12 +1,13 @@
 import './css/main.css';
 import { Notify } from 'notiflix';
-import SimpleLightbox from "simplelightbox";
-import 'simplelightbox/dist/simple-lightbox.min.css';
 import { fetchPictures } from './js/fetchPictures';
 import { renderGallery } from './js/renderGallery';
 import getRefs from './js/getRefs';
+import SimpleLightbox from "simplelightbox";
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const STORAGE_KEY = 'gallery-page-number';
+const STORAGE_SEARCH = 'search-end';
 const refs = getRefs();
 Notify.init({ fontSize: '18px', timeout: 7000});
 
@@ -26,12 +27,15 @@ function onSubmit(event) {
         return Notify.failure('Sorry, there are no images matching your search query. Please try again.');
       Notify.success(`Hooray! We found ${response.data.totalHits} images.`);
       localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(STORAGE_SEARCH);
       renderGallery(response);
     })
     .catch(onSearchError);
   let lightboxGallery = new SimpleLightbox('.gallery a', { captionsData: 'alt', captionDelay: 250 });
   window.addEventListener('scroll', () => {
     if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight) {
+      if (localStorage.getItem(STORAGE_SEARCH))
+        return Notify.failure("We're sorry, but you've reached the end of search results.");;
       let pageCounter = 1;
       if (localStorage.getItem(STORAGE_KEY)) {
         pageCounter = localStorage.getItem(STORAGE_KEY);
@@ -40,6 +44,7 @@ function onSubmit(event) {
         .then(response => {
           if (!response.data.hits.length) {
             localStorage.removeItem(STORAGE_KEY);
+            localStorage.setItem(STORAGE_SEARCH, 1);
             return Notify.failure("We're sorry, but you've reached the end of search results.");
           }
           let numbers = response.request.responseURL.match(/\d+/g);
