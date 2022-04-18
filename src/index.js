@@ -17,6 +17,8 @@ function onSubmit(event) {
   event.preventDefault();
   const value = refs.input.value.trim();
   refs.gallery.innerHTML = '';
+  let lightboxGallery;
+  localStorage.removeItem(STORAGE_SEARCH);
   if (!value) {
     return Notify.warning('Please enter some text to input field!');
   }
@@ -31,7 +33,9 @@ function onSubmit(event) {
       renderGallery(response);
     })
     .catch(onSearchError);
-  let lightboxGallery = new SimpleLightbox('.gallery a', { captionsData: 'alt', captionDelay: 250 });
+  if (lightboxGallery)
+    lightboxGallery.destroy();
+  lightboxGallery = new SimpleLightbox('.gallery a', { captionsData: 'alt', captionDelay: 250 });
   window.addEventListener('scroll', () => {
     if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight) {
       if (localStorage.getItem(STORAGE_SEARCH))
@@ -51,6 +55,7 @@ function onSubmit(event) {
           localStorage.setItem(STORAGE_KEY, numbers[numbers.length - 1]);
           renderGallery(response);
           lightboxGallery.refresh();
+          console.log(response);
         })
         .catch(onSearchError);
     }
