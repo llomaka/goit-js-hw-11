@@ -29,6 +29,7 @@
     "axios": "^0.26.1",
     "jquery": "^3.6.0",
     "notiflix": "^3.2.5",
-    "simplelightbox": "^2.10.2"
+    "simplelightbox": "^2.10.2",
+    "vanilla-back-to-top": "^7.2.1"
   }
 }
